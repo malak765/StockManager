@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StockManager Pro | Inventory Management</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="brand">
+<span>▣</span>
+
+<div>
+<b>Stock</b>Manager
+<small>Inventory Pro</small>
+</div>
+</div>
+
+<nav>
+
+<button class="nav-btn active" data-section="dashboard">
+⌂ <span>Dashboard</span>
+</button>
+
+<button class="nav-btn" data-section="products">
+▦ <span>Products</span>
+</button>
+
+<button class="nav-btn" data-section="movements">
+↕ <span>Stock Movement</span>
+</button>
+
+<button class="nav-btn" data-section="history">
+◷ <span>History</span>
+</button>
+
+<button class="nav-btn" data-section="alerts">
+⚠ <span>Stock Alerts</span>
+</button>
+
+</nav>
+
+<div class="sidebar-bottom">
+
+<button id="themeBtn" class="side-action">
+◐ <span>Dark Mode</span>
+</button>
+
+<button id="resetBtn" class="side-action danger">
+♲ <span>Reset All Data</span>
+</button>
+
+</div>
+
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- TOP BAR -->
+<header class="topbar">
+
+<div>
+<span class="eyebrow">
+INVENTORY MANAGEMENT
+</span>
+
+<h1 id="pageTitle">
+Dashboard
+</h1>
+</div>
+
+<div class="top-actions">
+
+<span id="clock"></span>
+
+<button id="exportBtn" class="btn secondary">
+⇩ Export CSV
+</button>
+
+<button id="mobileMenu" class="mobile-menu">
+☰
+</button>
+
+</div>
+
+</header>
+
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+
+<div class="hero">
+
+<div>
+<h2>
+Welcome to <strong>StockManager</strong>
+</h2>
+
+<p>
+Manage products, stock movements and inventory
+performance in one place.
+</p>
+</div>
+
+<button class="btn primary" data-go="movements">
+＋ New Movement
+</button>
+
+</div>
+
+
+<!-- STATISTICS -->
+<div class="stats-grid">
+
+<div class="stat blue">
+<span class="stat-icon">▦</span>
+
+<div>
+<small>Total Products</small>
+<strong id="statProducts">0</strong>
+</div>
+</div>
+
+
+<div class="stat green">
+<span class="stat-icon">↑</span>
+
+<div>
+<small>Total Incoming</small>
+<strong id="statIn">0</strong>
+</div>
+</div>
+
+
+<div class="stat orange">
+<span class="stat-icon">↓</span>
+
+<div>
+<small>Total Outgoing</small>
+<strong id="statOut">0</strong>
+</div>
+</div>
+
+
+<div class="stat purple">
+<span class="stat-icon">□</span>
+
+<div>
+<small>Current Stock</small>
+<strong id="statStock">0</strong>
+</div>
+</div>
+
+
+<div class="stat teal">
+<span class="stat-icon">$</span>
+
+<div>
+<small>Inventory Value</small>
+<strong id="statValue">$0.00</strong>
+</div>
+</div>
+
+
+<div class="stat red">
+<span class="stat-icon">!</span>
+
+<div>
+<small>Low / Out of Stock</small>
+<strong id="statAlerts">0</strong>
+</div>
+</div>
+
+</div>
+
+
+<!-- DASHBOARD CHARTS -->
+<div class="grid-2">
+
+<div class="card">
+
+<div class="card-head">
+
+<div>
+<h3>Stock Overview</h3>
+<p>Current quantity by product</p>
+</div>
+
+</div>
+
+<div id="stockBars" class="bars"></div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-head">
+
+<div>
+<h3>Stock Status</h3>
+<p>Inventory health</p>
+</div>
+
+</div>
+
+
+<div class="donut-wrap">
+
+<div id="donut" class="donut">
+
+<div>
+<strong id="donutTotal">0</strong>
+<small>products</small>
+</div>
+
+</div>
+
+
+<div class="legend">
+
+<span>
+<i class="dot good"></i>
+In Stock
+<b id="goodCount">0</b>
+</span>
+
+<span>
+<i class="dot low"></i>
+Low Stock
+<b id="lowCount">0</b>
+</span>
+
+<span>
+<i class="dot out"></i>
+Out of Stock
+<b id="outCount">0</b>
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RECENT MOVEMENTS -->
+<div class="card">
+
+<div class="card-head">
+
+<div>
+<h3>Recent Movements</h3>
+<p>Latest inventory activity</p>
+</div>
+
+<button class="link-btn" data-go="history">
+View all →
+</button>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Date</th>
+<th>Reference</th>
+<th>Product</th>
+<th>Category</th>
+<th>Type</th>
+<th>Qty</th>
+<th>Final Stock</th>
+</tr>
+
+</thead>
+
+<tbody id="recentTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+<section id="products" class="page">
+
+<div class="section-head">
+
+<div>
+<h2>Products</h2>
+
+<p>
+Create, update and manage your inventory items.
+</p>
+</div>
+
+<button class="btn primary" id="openProduct">
+＋ Add Product
+</button>
+
+</div>
+
+
+<div class="toolbar">
+
+<input
+id="productSearch"
+class="search"
+placeholder="⌕ Search by name or reference..."
+>
+
+<select id="categoryFilter">
+<option value="">All categories</option>
+</select>
+
+<select id="statusFilter">
+
+<option value="">
+All statuses
+</option>
+
+<option value="in">
+In Stock
+</option>
+
+<option value="low">
+Low Stock
+</option>
+
+<option value="out">
+Out of Stock
+</option>
+
+</select>
+
+</div>
+
+
+<div class="card table-card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Reference</th>
+<th>Product</th>
+<th>Category</th>
+<th>Unit Price</th>
+<th>Stock</th>
+<th>Minimum</th>
+<th>Status</th>
+<th>Value</th>
+<th>Actions</th>
+</tr>
+
+</thead>
+
+<tbody id="productsTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- STOCK MOVEMENT -->
+<section id="movements" class="page">
+
+<div class="section-head">
+
+<div>
+<h2>Stock Movement</h2>
+
+<p>
+Record incoming and outgoing quantities.
+</p>
+</div>
+
+</div>
+
+
+<div class="movement-layout">
+
+<div class="card">
+
+<h3>New Stock Movement</h3>
+
+<form id="movementForm">
+
+<label>
+Product
+
+<select id="movementProduct" required>
+
+<option value="">
+Select a product
+</option>
+
+</select>
+
+</label>
+
+
+<label>
+Movement Type
+
+<div class="type-switch">
+
+<button
+type="button"
+data-type="in"
+class="type-btn selected"
+>
+↑ Stock In
+</button>
+
+<button
+type="button"
+data-type="out"
+class="type-btn"
+>
+↓ Stock Out
+</button>
+
+</div>
+
+<input
+type="hidden"
+id="movementType"
+value="in"
+>
+
+</label>
+
+
+<label>
+Quantity
+
+<input
+id="movementQty"
+type="number"
+min="1"
+step="1"
+required
+placeholder="Enter quantity"
+>
+
+</label>
+
+
+<label>
+Note (optional)
+
+<textarea
+id="movementNote"
+maxlength="120"
+placeholder="e.g. New delivery, internal use..."
+></textarea>
+
+</label>
+
+
+<div id="movementPreview" class="preview">
+Select a product to preview the new stock.
+</div>
+
+
+<button
+class="btn primary full"
+type="submit"
+>
+Confirm Movement
+</button>
+
+</form>
+
+</div>
+
+
+<div class="card formula">
+
+<h3>Stock Calculation</h3>
+
+<div class="formula-box">
+
+<span>Current Stock</span>
+
+<b>+</b>
+
+<span>Incoming</span>
+
+<b>−</b>
+
+<span>Outgoing</span>
+
+<b>=</b>
+
+<strong>Final Stock</strong>
+
+</div>
+
+
+<p>
+The application automatically updates the product
+quantity and records every movement in the history.
+</p>
+
+
+<div class="rules">
+
+<span>
+✓ Negative stock is blocked
+</span>
+
+<span>
+✓ Date & time recorded automatically
+</span>
+
+<span>
+✓ Data saved locally
+</span>
+
+<span>
+✓ Low-stock alerts updated automatically
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- HISTORY -->
+<section id="history" class="page">
+
+<div class="section-head">
+
+<div>
+
+<h2>Movement History</h2>
+
+<p>
+Complete record of stock activity.
+</p>
+
+</div>
+
+<button
+class="btn secondary"
+id="clearHistory"
+>
+Clear History
+</button>
+
+</div>
+
+
+<div class="toolbar">
+
+<input
+id="historySearch"
+class="search"
+placeholder="⌕ Search history..."
+>
+
+
+<select id="historyType">
+
+<option value="">
+All movements
+</option>
+
+<option value="in">
+Stock In
+</option>
+
+<option value="out">
+Stock Out
+</option>
+
+</select>
+
+
+<select id="historySort">
+
+<option value="new">
+Newest first
+</option>
+
+<option value="old">
+Oldest first
+</option>
+
+<option value="qtyHigh">
+Highest quantity
+</option>
+
+<option value="qtyLow">
+Lowest quantity
+</option>
+
+</select>
+
+</div>
+
+
+<div class="card table-card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Date</th>
+<th>Reference</th>
+<th>Product</th>
+<th>Category</th>
+<th>Type</th>
+<th>Quantity</th>
+<th>Stock After</th>
+<th>Note</th>
+</tr>
+
+</thead>
+
+<tbody id="historyTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ALERTS -->
+<section id="alerts" class="page">
+
+<div class="section-head">
+
+<div>
+
+<h2>Stock Alerts</h2>
+
+<p>
+Products requiring attention.
+</p>
+
+</div>
+
+</div>
+
+
+<div id="alertsGrid" class="alert-grid"></div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal">
+
+<div class="modal-box">
+
+<button
+class="modal-close"
+data-close="productModal"
+>
+×
+</button>
+
+
+<h2 id="modalTitle">
+Add Product
+</h2>
+
+<p>
+Create or edit an inventory product.
+</p>
+
+
+<form id="productForm">
+
+<input
+type="hidden"
+id="editId"
+>
+
+
+<div class="form-grid">
+
+<label>
+Reference
+
+<input
+id="productRef"
+required
+maxlength="30"
+placeholder="e.g. LAP-001"
+>
+
+</label>
+
+
+<label>
+Product Name
+
+<input
+id="productName"
+required
+maxlength="60"
+placeholder="e.g. Laptop HP"
+>
+
+</label>
+
+
+<label>
+Category
+
+<select id="productCategory" required>
+
+<option value="">
+Select category
+</option>
+
+<option>Computer</option>
+<option>Electronics</option>
+<option>Accessories</option>
+<option>Office</option>
+<option>Peripherals</option>
+<option>Other</option>
+
+</select>
+
+</label>
+
+
+<label>
+Unit Price
+
+<input
+id="productPrice"
+type="number"
+min="0"
+step="0.01"
+required
+placeholder="0.00"
+>
+
+</label>
+
+
+<label>
+Current Stock
+
+<input
+id="productStock"
+type="number"
+min="0"
+step="1"
+required
+placeholder="0"
+>
+
+</label>
+
+
+<label>
+Minimum Stock
+
+<input
+id="productMinimum"
+type="number"
+min="0"
+step="1"
+required
+placeholder="5"
+>
+
+</label>
+
+</div>
+
+
+<div class="modal-actions">
+
+<button
+type="button"
+class="btn secondary"
+data-close="productModal"
+>
+Cancel
+</button>
+
+<button
+class="btn primary"
+type="submit"
+>
+Save Product
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
